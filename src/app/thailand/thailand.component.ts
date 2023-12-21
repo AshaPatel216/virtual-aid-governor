@@ -101,12 +101,12 @@ export class ThailandComponent {
         stateColor = '#4DB509';
       }
 
-      // Set visibility to false for areas with value (randomValue > 1000)
-      let isVisible = randomValue > 1000;
+      // Set visibility to false for areas with value (randomValue > 10)
+      let isVisible = randomValue > 10;
       console.log(randomValue + ': ' + isVisible)
       stateData.push({
         id: state.id,
-        value: randomValue > 1000 ? randomValue : '',
+        value: randomValue > 10 ? randomValue : '',
         polygonSettings: {
           fill: stateColor,
           visible: isVisible // Sets visibility based on the condition
@@ -222,6 +222,12 @@ export class ThailandComponent {
       });
 
       this.lastClickedPolygon = clickedPolygon;
+
+      window.scroll({
+        top: 0,
+        left: 0,
+        behavior: 'smooth'
+      });
     });
 
 
