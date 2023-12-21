@@ -101,13 +101,19 @@ export class ThailandComponent {
         stateColor = '#4DB509';
       }
 
+      // Set visibility to false for areas with value (randomValue > 1000)
+      let isVisible = randomValue > 1000;
+      console.log(randomValue + ': ' + isVisible)
       stateData.push({
         id: state.id,
-        value: randomValue,
+        value: randomValue > 1000 ? randomValue : '',
         polygonSettings: {
           fill: stateColor,
+          visible: isVisible // Sets visibility based on the condition
         },
       });
+
+
       // Additional logic or processing can go here
     }
 
@@ -116,6 +122,7 @@ export class ThailandComponent {
     let legend = chart.children.push(am5.Legend.new(root, {
       // Legend configuration options
       layout: root.verticalLayout,
+      clickTarget: "none"
     }));
 
     // Change legend marker style to square
@@ -124,9 +131,15 @@ export class ThailandComponent {
       height: 15, // height of the square
 
       background: am5.Rectangle.new(root, {
-        fill: am5.color(0x000000), // default fill, will be overridden
         strokeWidth: 0,
       })
+    });
+
+    legend.markerRectangles.template.setAll({
+      cornerRadiusTL: 10,
+      cornerRadiusTR: 10,
+      cornerRadiusBL: 10,
+      cornerRadiusBR: 10
     });
 
     // push the legendData to the legend
