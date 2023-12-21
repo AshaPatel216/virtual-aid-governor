@@ -23,7 +23,13 @@ export class ThailandComponent {
   state = '';
   numberOfPeople = 0;
   lastClickedPolygon: am5map.MapPolygon | null = null;
-
+  legendData = [
+    { name: "> 8000", fill: am5.color(0x4DB509) },
+    { name: "5000 - 8000", fill: am5.color(0x8CE552) },
+    { name: "2000 - 5000", fill: am5.color(0xC5FBA2) },
+    { name: "500 - 2000", fill: am5.color(0xFF6767) },
+    { name: "< 500", fill: am5.color(0xB60909) },
+  ]
   constructor() { }
 
   ngAfterViewInit() {
@@ -104,6 +110,34 @@ export class ThailandComponent {
       });
       // Additional logic or processing can go here
     }
+
+
+    // Create and configure a legend
+    let legend = chart.children.push(am5.Legend.new(root, {
+      // Legend configuration options
+      layout: root.verticalLayout,
+    }));
+
+    // Change legend marker style to square
+    legend.markers.template.setAll({
+      width: 30, // width of the square
+      height: 15, // height of the square
+
+      background: am5.Rectangle.new(root, {
+        fill: am5.color(0x000000), // default fill, will be overridden
+        strokeWidth: 0,
+      })
+    });
+
+    // push the legendData to the legend
+    am5.array.each(this.legendData, function (group) {
+      var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root, {
+        name: group.name,
+        fill: group.fill
+      }));
+      legend.data.push(polygonSeries);
+    });
+
 
     // creating series to add labels in all areas
     var bubbleSeries = chart.series.push(
