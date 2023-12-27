@@ -1,8 +1,11 @@
 <section>
   <div
-    style="height: 50vh; width: 50%"
+    style="height: 70vh; width: 70%"
     leaflet
     [leafletOptions]="options"
     [leafletLayers]="layers"
   ></div>
+  <div>
+    <button (click)="locateMe()">Get My Live location</button>
+  </div>
 </section>

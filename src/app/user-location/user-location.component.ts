@@ -34,8 +34,34 @@ export class UserLocationComponent implements OnInit {
     let address1 = 'Abhishek Avenue, Bharuch, Gujarat, India, 392011';
     let address2 = 'Amin Street, Zadeshwar, Bharuch, Gujarat, India, 392011';
     let address3 = 'Ramkhamheang Road Sammakorn Village, Bangkok, 10240, Thailand';
-    //  this.onAddressSubmit(address1); // for openstrretmap nomination (Not working)
-    this.getCoordinates(address3);
+
+    // From online: 20.412220, 72.878952
+    // Location IQ: 22.30952, 73.173498
+    // Opencage: not found
+    let address4 = 'Aman Daredi B-225, Somnath Nagar, Near Sai Temple, Alwanaka, Manjalpur, Vadodara, Gujarat, India, 390011' // 
+
+    // From online: 25.706090, 87.459120
+    // Location IQ: 25.159457, 87.225384
+    // Opencage: 25.78,87.47
+    let address5 = 'Kajha, Purnia, 854301, Bihar, India';
+
+
+    // From online:22.294790, 70.787300
+    // Location IQ: 22.720466, 71.625768
+    // Opencage: 22.72706, 71.64856
+
+    let address6 = 'Plot no. 34, Sanghvipark Society, near Ramji temple, New 80 feet road, Surendranagar, Gujarat, India, 363035';
+
+    // From online: 21.523910 73.240320
+    // Location IQ: 22.687581, 79.370366
+    // Opencage: 22.83282, 69.35237
+    let address7 = 'Hala Faliya, Behind Hala Faliya Masjid, Near Rangchuli, Mandvi, Kachchh, Gujarat, India,370465'
+
+
+    this.getMyAddress();
+    //  this.onAddressSubmit(address5); // for openstrretmap nomination (Not working)
+    this.getCoordinates(address6); // LocationIQ (Tried in free trial and working fine)
+    //this.getMarkerUsingOpenCage(address6); // opencage
   }
 
   ngOnInit(): void {
@@ -63,7 +89,7 @@ export class UserLocationComponent implements OnInit {
         const latlng = latLng(coords.latitude, coords.longitude);
         console.log(latlng)
         this.layers = [
-          marker(latlng).bindPopup('You are here!')
+          marker(latlng).bindPopup(`${latlng}`)
         ];
         this.options.center = latlng; // Center the map on the user's location
         this.options.zoom = 10; // Adjust zoom level
@@ -74,13 +100,33 @@ export class UserLocationComponent implements OnInit {
   }
 
   /**
+   * Get address from lat-long using openstreetmap (Not accurate for all lat-long)
+   */
+  getMyAddress(): void {
+    this.geocodingService.getAddress(21.716785, 73.031131).subscribe(
+      data => {
+        if (data) {
+          console.log('Address:', data.display_name);
+        } else {
+          console.log('No address found');
+        }
+      },
+      error => {
+        console.error('Error fetching address: ', error);
+      }
+    );
+  }
+
+  /**
    * Get coordinates using openstreetmap (Not wokring)
    * @param address 
    */
   onAddressSubmit(address: string): void {
     this.geocodingService.getLatLng(address).subscribe(response => {
+      console.log(response)
       if (response.length > 0) {
         const latLng = L.latLng(response[0].lat, response[0].lon);
+        alert(latLng)
         this.layers = [
           marker(latLng).bindPopup(address)
         ];
@@ -98,6 +144,7 @@ export class UserLocationComponent implements OnInit {
     this.geocodingService.getLatLong(address, apiKey)
       .subscribe(data => {
         const latLng = L.latLng(data[0].lat, data[0].lon);
+        console.log(latLng);
         this.layers = [
           marker(latLng).bindPopup(address)
         ];
@@ -107,9 +154,11 @@ export class UserLocationComponent implements OnInit {
       });
   }
 
-
-
-
-
-
+  getMarkerUsingOpenCage(address: string): void {
+    this.geocodingService.geocodeAddress(address).subscribe(response => {
+      console.log(response); // Handle the response here
+    }, error => {
+      console.error(error); // Handle errors here
+    });
+  }
 }

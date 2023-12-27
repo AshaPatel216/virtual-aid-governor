@@ -185,11 +185,12 @@ export class ThailandComponent {
 
     // on clicking of any of the area in map, show user details to right section
     polygonSeries.mapPolygons.template.events.on('click', (ev) => {
+      console.log(ev)
       this.usersAvailable = true;
       let dataItem: am5.DataItem<IComponentDataItem> | undefined =
         ev.target.dataItem;
       let data: any = dataItem?.dataContext;
-      this.state = data.name;
+      this.state = data.NAME_ENG;
       this.numberOfPeople = data.value;
 
       // reduce opacity of all area
@@ -200,7 +201,7 @@ export class ThailandComponent {
       // remove/unset shadow of last clicked area
       if (this.lastClickedPolygon) {
         this.lastClickedPolygon.setAll({
-          strokeOpacity: 1,
+          strokeOpacity: 0,
           shadowBlur: 1,
           shadowOffsetX: 0,
           shadowOffsetY: 0,
